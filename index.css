@@ -1,0 +1,59 @@
+body{
+  margin:0;
+  padding:0;
+  --board-side:12;
+  position:relative;
+  width:100vw;
+  height:100vh;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+
+  .board{
+    width:calc(90vw + 4px);
+    position:absolute;
+    /* padding:2rem; */
+    display:grid;
+    grid-template-columns: repeat(var(--board-side), calc( 90vw / var(--board-side)) );
+    grid-template-rows: repeat(var(--board-side), calc( 90vw / var(--board-side)) );
+
+    box-sizing: border-box;
+    border:2px solid gray;
+
+    &.flag{
+      border-color:red;
+    }
+
+    .cell{
+      box-sizing: border-box;
+      width:100%;
+      height:100%;
+      background-color: slategray;
+      border-width: 1px;
+      border-style: outset;
+      border-color: lightsteelblue darkslategray darkslategray lightsteelblue;
+      border-radius:1px;
+      user-select: none;
+
+      display:flex;
+      align-items: center;
+      justify-content: center;
+
+      &.uncovered{
+        color:darkslategray;
+        background-color: lightslategray;
+
+        border-width: 1px;
+        border-style: inset;
+        border-color: lightslategray darkslategray darkslategray lightslategray;
+        border-radius:1px;
+      }
+
+      &.flagged{
+        color:rgb(255, 59, 59);
+      }
+    }
+  }
+
+}
