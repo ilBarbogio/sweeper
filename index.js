@@ -116,14 +116,15 @@ function uncoverCell(clicked){
 }
 
 function flagCell(cell){
-  if(!cell.classList.contains("uncovered"){
-  if(cell.classList.contains("flagged")){
-    cell.classList.remove("flagged")
-    cell.innerHTML=""
-  }else{
-    cell.classList.add("flagged")
-    cell.innerHTML="&#9873;"
-  }}
+  if(!cell.classList.contains("uncovered")){
+    if(cell.classList.contains("flagged")){
+      cell.classList.remove("flagged")
+      cell.innerHTML=""
+    }else{
+      cell.classList.add("flagged")
+      cell.innerHTML="&#9873;"
+    }
+  }
 }
 
 function clickTile(ev){
