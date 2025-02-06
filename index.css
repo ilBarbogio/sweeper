@@ -1,3 +1,16 @@
+@keyframes endgame-flashing{
+  0% {color:red;}
+  100% {color:yellow;}
+}
+@keyframes endgame-rising{
+  0% {top:90vh}
+  100% {top:-20vh}
+}
+@keyframes disappear{
+  0% {opacity:1}
+  100% {opacity:0}
+}
+
 body{
   margin:0;
   padding:0;
@@ -13,13 +26,14 @@ body{
   .board{
     width:calc(90vw + 4px);
     position:absolute;
-    /* padding:2rem; */
     display:grid;
     grid-template-columns: repeat(var(--board-side), calc( 90vw / var(--board-side)) );
     grid-template-rows: repeat(var(--board-side), calc( 90vw / var(--board-side)) );
 
     box-sizing: border-box;
     border:2px solid gray;
+
+    background-size: cover;
 
     &.flag{
       border-color:red;
@@ -42,18 +56,44 @@ body{
 
       &.uncovered{
         color:darkslategray;
-        background-color: lightslategray;
-
+        background-color: #778899;
+        
         border-width: 1px;
         border-style: inset;
         border-color: lightslategray darkslategray darkslategray lightslategray;
         border-radius:1px;
+        
+        &.transparent{
+          background-color: #778899dd;
+          backdrop-filter: blur(10px);
+        }
       }
 
       &.flagged{
         color:rgb(255, 59, 59);
       }
+
+      &.disappearing{
+        animation: disappear 1.5s;
+      }
     }
   }
 
+  .endgame{
+    position:absolute;
+    width:100%;
+    text-align:center;
+    top:120vh;
+    font-size: x-large;
+    text-transform: uppercase;
+    font-variant: small-caps;
+
+
+    &.rise{
+      animation-name:endgame-flashing, endgame-rising;
+      animation-duration: 1s, 8s;
+      animation-iteration-count: infinite, 1;
+      animation-direction: alternate-reverse, normal;
+    }
+  }
 }

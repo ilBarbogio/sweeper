@@ -1,12 +1,27 @@
 let boardSide, board, cells, minesLaid
-let victory
+let victory, imageUrl
+
+function detectImage(){
+  // let encr=btoa("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQziAhrQ2boRgrbEv6GbMLqkdm9nr6Ah5LbnA&s")
+  // console.log(encr)
+
+  if(window.location?.search){
+    let str=window.location?.search.replace("?image=","")
+    imageUrl=atob(str)
+    // console.log(imageUrl)
+  }else imageUrl=undefined
+
+  setup()
+}
 
 function setup(){
   board=document.querySelector(".board")
   board.innerHTML=""
 
+  if(imageUrl) board.style.backgroundImage=`url("${imageUrl}")`
+
   document.body.addEventListener("click",(ev)=>{
-    if(!ev.target.classList.contains("cell")) board.classList.toggle("flag")
+    if(!ev.target.classList.contains("cell") && !victory) board.classList.toggle("flag")
   })
   
   cells=[]
@@ -30,6 +45,7 @@ function setup(){
 
 function layMines(clicked){
   let maxMines=2*boardSide
+  
   while(minesLaid<maxMines){
     let index=Math.floor(Math.random()*boardSide**2)
     let cell=cells[index]
@@ -87,10 +103,10 @@ function uncoverCell(clicked){
   if(!clicked.classList.contains("uncovered") && !clicked.classList.contains("flagged")){
     if(clicked.dataset.mine==1){
       victory=false
-      alert("YOU LOSE :(")
-      for(let c of document.querySelectorAll("[data-mine='1']")) c.innerHTML="&#9967;"
+      endgame()
     }else{
       clicked.classList.add("uncovered")
+      if(imageUrl) clicked.classList.add("transparent")
       clicked.innerHTML=clicked.dataset.value!=0?clicked.dataset.value:""
       let queued=[clicked]
 
@@ -100,6 +116,7 @@ function uncoverCell(clicked){
         for(let n of neighs){
           if(!n.classList.contains("uncovered") && n.dataset.mine==0){
             n.classList.add("uncovered")
+            if(imageUrl) n.classList.add("transparent")
             n.innerHTML=n.dataset.value!=0?n.dataset.value:""
             if(c.dataset.value==0) queued.push(n)
           }
@@ -107,23 +124,20 @@ function uncoverCell(clicked){
       }
 
       if(boardSide**2-document.querySelectorAll(".cell.uncovered").length==minesLaid){
-        alert("YOU WON :)")
         victory=true
-        for(let c of document.querySelectorAll("[data-mine='1']")) c.innerHTML="&#9967;"
+        endgame()
       }
     }
   }
 }
 
 function flagCell(cell){
-  if(!cell.classList.contains("uncovered")){
-    if(cell.classList.contains("flagged")){
-      cell.classList.remove("flagged")
-      cell.innerHTML=""
-    }else{
-      cell.classList.add("flagged")
-      cell.innerHTML="&#9873;"
-    }
+  if(cell.classList.contains("flagged")){
+    cell.classList.remove("flagged")
+    cell.innerHTML=""
+  }else{
+    cell.classList.add("flagged")
+    cell.innerHTML="&#9873;"
   }
 }
 
@@ -135,12 +149,38 @@ function clickTile(ev){
       numberTiles()
       uncoverCell(cell)
     }else{
-      console.log(board.classList)
       if(board.classList.contains("flag")) flagCell(cell)
       else uncoverCell(cell)
     }
   }
 }
 
+function endgame(){
+  for(let c of document.querySelectorAll("[data-mine='1']")){
+    c.style.color=victory?"lime":"red"
+    c.innerHTML="&#9967;"
+  }
+  let messageDisplay=document.querySelector(".endgame")
+  messageDisplay.innerHTML=victory?"YOU WON :P":"YOU LOSE :("
+  messageDisplay.classList.add("rise")
 
-setup()
+  if(victory){
+    let cells=[...document.querySelectorAll(".cell")]
+    let interval=setInterval(()=>{
+      if(cells.length>0){
+        let c=cells.pop()
+        c.classList.add("disappearing")
+        c.addEventListener("animationend",(ev)=>{
+          if(ev.animationName=="disappear"){
+            c.remove()
+          }
+        })
+      }else{
+        clearInterval(interval)
+      }
+    },200)
+  }
+}
+
+
+detectImage()
