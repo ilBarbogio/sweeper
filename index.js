@@ -182,8 +182,8 @@ function endgame(){
 
     if(imageUrl){
       const link=document.createElement("a")
-      a.href=`url("${imageUrl}")`
-      a.style="position:fixed;top:-10em;visibility:hidden"
+      link.href=`url("${imlinkgeUrl}")`
+      link.style="position:fixed;top:-10em;visibility:hidden"
       document.body.append(a)
       board.addEventListener("click",()=>{a.click()})
     }
