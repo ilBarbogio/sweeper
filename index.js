@@ -135,7 +135,7 @@ function flagCell(cell){
   if(cell.classList.contains("flagged")){
     cell.classList.remove("flagged")
     cell.innerHTML=""
-  }else{
+  }else if(!cell.classList.containes("uncovered")){
     cell.classList.add("flagged")
     cell.innerHTML="&#9873;"
   }
@@ -179,6 +179,14 @@ function endgame(){
         clearInterval(interval)
       }
     },200)
+
+    if(imageUrl){
+      const link=document.createElement("a")
+      a.href=`url("${imageUrl}")`
+      a.style="position:fixed;top:-10em;visibility:hidden"
+      document.body.append(a)
+      board.addEventListener("click",()=>{a.click()})
+    }
   }
 }
 
