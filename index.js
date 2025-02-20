@@ -135,7 +135,7 @@ function flagCell(cell){
   if(cell.classList.contains("flagged")){
     cell.classList.remove("flagged")
     cell.innerHTML=""
-  }else if(!cell.classList.containes("uncovered")){
+  }else if(!cell.classList.contains("uncovered")){
     cell.classList.add("flagged")
     cell.innerHTML="&#9873;"
   }
