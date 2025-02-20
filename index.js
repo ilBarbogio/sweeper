@@ -185,7 +185,7 @@ function endgame(){
       link.href=imageUrl
       link.style="position:fixed;top:-10em;visibility:hidden"
       document.body.append(a)
-      board.addEventListener("click",()=>{a.click()})
+      board.addEventListener("click",()=>{link.click()})
     }
   }
 }
