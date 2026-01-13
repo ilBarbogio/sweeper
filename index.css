@@ -14,7 +14,7 @@
 body{
   margin:0;
   padding:0;
-  --board-side:12;
+  --board-side:9;
   position:relative;
   width:100vw;
   height:100vh;
