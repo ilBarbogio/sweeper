@@ -61,7 +61,7 @@ body{
 
       &.uncovered{
         color:darkslategray;
-        background-color: #778899aa;
+        background-color: #778899;
         
         border-width: 1px;
         border-style: inset;
