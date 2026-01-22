@@ -115,8 +115,8 @@ function saveImage(){
     const can=container.querySelector("canvas")
     if(can){
       const ctx=can.getContext("2d",{willFrequentlyRead:true})
-      let w=can.width-can.width%5
-      let h=can.height-can.height%5
+      let w=can.width
+      let h=can.height
       
       let iter=300
       // let maxFactor=Math.min(Math.ceil(Math.sqrt(w)),Math.ceil(Math.sqrt(h)))
