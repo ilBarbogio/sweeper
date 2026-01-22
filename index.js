@@ -122,7 +122,7 @@ function saveImage(){
       // let maxFactor=Math.min(Math.ceil(Math.sqrt(w)),Math.ceil(Math.sqrt(h)))
       let factors=(new Array(16)).fill(0).map((el,i)=>i+3)
       factors=factors.filter(el=>w%el==0 && h%el==0)
-      scramble(password,w,h,ctx,iter,factors[0])
+      scramble(password,w,h,ctx,iter,5)
 
 
       can.toBlob(blob=>{
@@ -179,7 +179,7 @@ function loadImage(){
         let iter=300
         let factors=(new Array(16)).fill(0).map((el,i)=>i+3)
         factors=factors.filter(el=>can.width%el==0 && can.height%el==0)
-        if(factors) scramble(password,can.width,can.height,ctx,iter,factors[0],true)
+        scramble(password,can.width,can.height,ctx,iter,5,true)
 
         setupBoard(ctx.getImageData(0,0,can.width,can.height))
         
