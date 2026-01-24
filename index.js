@@ -165,12 +165,12 @@ function loadImage(){
           stream=undefined
         }
         const container=document.body.querySelector(".video-container")
-        let can=container.querySelector("canvas")
-        if(can) can.remove()
+        let oldCan=container.querySelector("canvas")
+        if(oldCan) oldCan.remove()
         
-        let oldCan=document.createElement("canvas")
-        container.append(oldCan)
-        const ctx=oldCan.getContext("2d")
+        let can=document.createElement("canvas")
+        container.append(can)
+        const ctx=can.getContext("2d")
         can.width=img.width
         can.height=img.height
         can.style.display="none"
