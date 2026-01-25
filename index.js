@@ -35,19 +35,14 @@ function setup(){
   })
   
   document.querySelector("button.snap").addEventListener("click",()=>{
-    const container=document.body.querySelector(".video-container")
-    if(!container.classList.contains("snapped")) snapImage()
-    else switchToCapture()
+    snapImage()
   })
 
   document.querySelector("button.save").addEventListener("click",()=>{
-    const container=document.body.querySelector(".video-container")
-    if(container.classList.contains("snapped")) saveImage()
+    saveImage()
   })
 
   document.querySelector("button.exit").addEventListener("click",()=>{
-    if(stream) for(let t of stream.getTracks()) t.stop()
-    stream=undefined
     setupBoard()
   })
 
@@ -57,86 +52,79 @@ function setup(){
   
   //board  
   setupBoard()
+  // switchToCapture()
 }
 
 //#region CAPTURE
 //capturing
 async function switchToCapture(){
-  const container=document.body.querySelector(".video-container")
-  container.classList.remove("snapped")
+  const container=document.body.querySelector(".capture")
+  document.body.classList.add("capturing")
 
   document.body.querySelector("button.save").setAttribute("disabled",true)
-
-  const can=container.querySelector("canvas")
-  if(can) can.remove()
-  counter=0
-  board.classList.add("capturing")
-  capture.classList.add("capturing")
-
-  const video=document.createElement("video")
-  container.append(video)
-  stream = await navigator.mediaDevices.getUserMedia({
-    video: { facingMode: 'self' }
-  })
-  video.srcObject = stream
-  video.play()
 }
 
 function snapImage(){
-  const container=document.body.querySelector(".video-container")
-  container.classList.add("snapped")
+  const container=document.body.querySelector(".capture")
 
-  document.body.querySelector("button.save").removeAttribute("disabled")
+  let prevImg=container.querySelector("img")
+  if(prevImg) prevImg.remove()
 
-  const video=document.body.querySelector("video")
-  if(video){
-    const can=document.createElement("canvas")
-    container.append(can)
-    const ctx=can.getContext("2d")
-    can.width=video.videoWidth
-    can.height=video.videoHeight
+  const input=document.createElement("input")
+  input.type="file"
+  input.capture="self"
+  input.addEventListener("change",(ev)=>{
+    if(ev.target.files.length==1){
+      let file=ev.target.files[0]
+      const url=URL.createObjectURL(file)
 
-    ctx.drawImage(video,0,0)
-    
-    for(let t of stream.getTracks()) t.stop()
-    stream=undefined
-    video.remove()
-  }  
-  // const url=can.toDataURL("image/png",1)
+      const img=document.createElement("img")
+      img.addEventListener("load",ev=>{
+        URL.revokeObjectURL(url)
+        container.querySelector("button.save").removeAttribute("disabled")
+      })
+      container.querySelector(".image-container").append(img)
+      img.src=url
+      input.remove()
+    }
+  })
+  container.append(input)
+  input.click()
 
-  // document.body.style.backgroundImage=`url("${url}")`
 }
 
 function saveImage(){
   const password=prompt("Inserire una password numerica")
   if(isNaN(password) || password===null) alert("La password deve essere composta solo da numeri")
   else{
-    const container=document.body.querySelector(".video-container")
-    const can=container.querySelector("canvas")
-    if(can){
-      const ctx=can.getContext("2d",{willFrequentlyRead:true})
-      let w=can.width
-      let h=can.height
+    const container=document.body.querySelector(".capture")
+    const img=container.querySelector("img")
+    const can=document.createElement("canvas")
+    const ctx=can.getContext("2d",{willFrequentlyRead:true})
+
+    let w=img.width
+    let h=img.height
+    can.width=w
+    can.height=h
+    ctx.drawImage(img,0,0)
+    
+    let iter=300
+    let factors=(new Array(16)).fill(0).map((el,i)=>i+3)
+    factors=factors.filter(el=>w%el==0 && h%el==0)
+    scramble(password,w,h,ctx,iter,factors[0])
+
+
+    can.toBlob(blob=>{
+      const url=URL.createObjectURL(blob)
       
-      let iter=300
-      // let maxFactor=Math.min(Math.ceil(Math.sqrt(w)),Math.ceil(Math.sqrt(h)))
-      let factors=(new Array(16)).fill(0).map((el,i)=>i+3)
-      factors=factors.filter(el=>w%el==0 && h%el==0)
-      scramble(password,w,h,ctx,iter,5)
+      const link=document.createElement("a")
+      link.setAttribute("download","sweeperimage.png")
+      link.href=url
+      link.click()
 
-
-      can.toBlob(blob=>{
-        const url=URL.createObjectURL(blob)
-        
-        const link=document.createElement("a")
-        link.setAttribute("download","sweeperimage.png")
-        link.href=url
-        link.click()
-
-        link.remove()
-        URL.revokeObjectURL(url)
-      })
-    }
+      link.remove()
+      URL.revokeObjectURL(url)
+    })
   }
 }
 
@@ -167,7 +155,7 @@ function loadImage(){
         const container=document.body.querySelector(".video-container")
         let oldCan=container.querySelector("canvas")
         if(oldCan) oldCan.remove()
-        
+
         let can=document.createElement("canvas")
         container.append(can)
         const ctx=can.getContext("2d")
@@ -179,7 +167,7 @@ function loadImage(){
         let iter=300
         let factors=(new Array(16)).fill(0).map((el,i)=>i+3)
         factors=factors.filter(el=>can.width%el==0 && can.height%el==0)
-        scramble(password,can.width,can.height,ctx,iter,5,true)
+        if(factors) scramble(password,can.width,can.height,ctx,iter,factors[0],true)
 
         setupBoard(ctx.getImageData(0,0,can.width,can.height))
         
