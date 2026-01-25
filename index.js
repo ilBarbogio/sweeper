@@ -51,8 +51,8 @@ function setup(){
   })
   
   //board  
-  // setupBoard()
-  switchToCapture()
+  setupBoard()
+  //switchToCapture()
 }
 
 //#region CAPTURE
