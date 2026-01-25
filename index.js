@@ -51,8 +51,8 @@ function setup(){
   })
   
   //board  
-  setupBoard()
-  // switchToCapture()
+  // setupBoard()
+  switchToCapture()
 }
 
 //#region CAPTURE
@@ -72,7 +72,7 @@ function snapImage(){
 
   const input=document.createElement("input")
   input.type="file"
-  input.capture="self"
+  input.capture="user"
   input.addEventListener("change",(ev)=>{
     if(ev.target.files.length==1){
       let file=ev.target.files[0]
@@ -82,6 +82,27 @@ function snapImage(){
       img.addEventListener("load",ev=>{
         URL.revokeObjectURL(url)
         container.querySelector("button.save").removeAttribute("disabled")
+
+        const can=document.createElement("canvas")
+        const ctx=can.getContext("2d",{willFrequentlyRead:true})
+
+        let w=img.width
+        let h=img.height
+        let rHtoW=h/w
+
+        let minWidth=Math.min(w,window.innerWidth)
+        let minHeight=rHtoW*minWidth
+
+        minWidth=minWidth-minWidth%5
+        minHeight=minHeight-minHeight%5
+
+        can.width=minWidth
+        can.height=minHeight
+
+        container.querySelector(".image-container").append(can)
+        img.remove()
+
+        ctx.drawImage(img,0,0,minWidth,minHeight)
       })
       container.querySelector(".image-container").append(img)
       img.src=url
@@ -94,37 +115,28 @@ function snapImage(){
 }
 
 function saveImage(){
-  const password=prompt("Inserire una password numerica")
+  const password=1234//prompt("Inserire una password numerica")
   if(isNaN(password) || password===null) alert("La password deve essere composta solo da numeri")
   else{
     const container=document.body.querySelector(".capture")
-    const img=container.querySelector("img")
-    const can=document.createElement("canvas")
-    const ctx=can.getContext("2d",{willFrequentlyRead:true})
+    const can=container.querySelector("canvas")
+    const ctx=can.getContext("2d")
 
-    let w=img.width
-    let h=img.height
-    can.width=w
-    can.height=h
-    ctx.drawImage(img,0,0)
-    
     let iter=300
-    let factors=(new Array(16)).fill(0).map((el,i)=>i+3)
-    factors=factors.filter(el=>w%el==0 && h%el==0)
-    scramble(password,w,h,ctx,iter,factors[0])
+    scramble(password,can.width,can.height,ctx,iter,5)
 
 
-    can.toBlob(blob=>{
-      const url=URL.createObjectURL(blob)
+    // can.toBlob(blob=>{
+    //   const url=URL.createObjectURL(blob)
       
-      const link=document.createElement("a")
-      link.setAttribute("download","sweeperimage.png")
-      link.href=url
-      link.click()
+    //   const link=document.createElement("a")
+    //   link.setAttribute("download","sweeperimage.png")
+    //   link.href=url
+    //   link.click()
 
-      link.remove()
-      URL.revokeObjectURL(url)
-    })
+    //   link.remove()
+    //   URL.revokeObjectURL(url)
+    // })
   }
 }
 
@@ -146,28 +158,23 @@ function loadImage(){
         if(isNaN(password) || password===null) alert("La password deve essere composta solo da numeri")
         
         URL.revokeObjectURL(url)
-        const video=document.body.querySelector("video")
-        if(video) video.remove()
-        if(stream){
-          for(let t of stream.getTracks()) t.stop()
-          stream=undefined
-        }
-        const container=document.body.querySelector(".video-container")
+        
+        const container=document.body.querySelector(".image-container")
         let oldCan=container.querySelector("canvas")
         if(oldCan) oldCan.remove()
+        let oldImg=container.querySelector("img")
+        if(oldImg) oldImg.remove()
 
         let can=document.createElement("canvas")
         container.append(can)
         const ctx=can.getContext("2d")
-        can.width=img.width
-        can.height=img.height
+        can.width=img.width-img.width%5
+        can.height=img.height-img.height%5
         can.style.display="none"
-        ctx.drawImage(img,0,0)
+        ctx.drawImage(img,0,0,can.width,can.height)
 
         let iter=300
-        let factors=(new Array(16)).fill(0).map((el,i)=>i+3)
-        factors=factors.filter(el=>can.width%el==0 && can.height%el==0)
-        if(factors) scramble(password,can.width,can.height,ctx,iter,factors[0],true)
+        scramble(password,can.width,can.height,ctx,iter,5,true)
 
         setupBoard(ctx.getImageData(0,0,can.width,can.height))
         
