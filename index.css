@@ -36,9 +36,6 @@ body{
     background-size: cover;
     background-position: center;
 
-    &.capturing{
-      display:none;
-    }
 
     &.flag{
       border-color:red;
@@ -61,7 +58,7 @@ body{
 
       &.uncovered{
         color:darkslategray;
-        background-color: #778899;
+        background-color: #778899aa;
         
         border-width: 1px;
         border-style: inset;
@@ -110,15 +107,20 @@ body{
     align-items: center;
     gap:.5rem;
 
-    &.capturing{
-      display:flex;
-    }
 
-    .video-container{
-      video,
-      canvas{
-        width:100%;
-      }
+    input[type="file"]{
+      display:none;
+      width:0;
+      height:0;
+    }
+  }
+
+  &.capturing{
+    .board{
+      display:none;
+    }
+    .capture{
+      display:flex;
     }
   }
 }
