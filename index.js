@@ -52,7 +52,7 @@ function setup(){
   
   //board  
   setupBoard()
-  //switchToCapture()
+  // switchToCapture()
 }
 
 //#region CAPTURE
@@ -88,21 +88,16 @@ function snapImage(){
 
         let w=img.width
         let h=img.height
-        let rHtoW=h/w
-
-        let minWidth=Math.min(w,window.innerWidth)
-        let minHeight=rHtoW*minWidth
-
-        minWidth=minWidth-minWidth%5
-        minHeight=minHeight-minHeight%5
-
-        can.width=minWidth
-        can.height=minHeight
+        let orientation=w<=h ? "portrait" : "landascape"
+        let side=orientation=="portrait" ? w-w%5 : h-h%5
+        
+        can.width=side
+        can.height=side
 
         container.querySelector(".image-container").append(can)
-        img.remove()
 
-        ctx.drawImage(img,0,0,minWidth,minHeight)
+        ctx.drawImage(img,0,0,side,side,0,0,side,side)
+        img.remove()
       })
       container.querySelector(".image-container").append(img)
       img.src=url
@@ -115,7 +110,7 @@ function snapImage(){
 }
 
 function saveImage(){
-  const password=1234//prompt("Inserire una password numerica")
+  const password=prompt("Inserire una password numerica")
   if(isNaN(password) || password===null) alert("La password deve essere composta solo da numeri")
   else{
     const container=document.body.querySelector(".capture")
@@ -126,17 +121,17 @@ function saveImage(){
     scramble(password,can.width,can.height,ctx,iter,5)
 
 
-    // can.toBlob(blob=>{
-    //   const url=URL.createObjectURL(blob)
+    can.toBlob(blob=>{
+      const url=URL.createObjectURL(blob)
       
-    //   const link=document.createElement("a")
-    //   link.setAttribute("download","sweeperimage.png")
-    //   link.href=url
-    //   link.click()
+      const link=document.createElement("a")
+      link.setAttribute("download","sweeperimage.png")
+      link.href=url
+      link.click()
 
-    //   link.remove()
-    //   URL.revokeObjectURL(url)
-    // })
+      link.remove()
+      URL.revokeObjectURL(url)
+    })
   }
 }
 
@@ -160,16 +155,13 @@ function loadImage(){
         URL.revokeObjectURL(url)
         
         const container=document.body.querySelector(".image-container")
-        let oldCan=container.querySelector("canvas")
-        if(oldCan) oldCan.remove()
-        let oldImg=container.querySelector("img")
-        if(oldImg) oldImg.remove()
+        container.innerHTML=""
 
         let can=document.createElement("canvas")
         container.append(can)
         const ctx=can.getContext("2d")
-        can.width=img.width-img.width%5
-        can.height=img.height-img.height%5
+        can.width=img.width
+        can.height=img.height
         can.style.display="none"
         ctx.drawImage(img,0,0,can.width,can.height)
 
@@ -237,8 +229,7 @@ function scramble(password,w,h,ctx,iterations,factor,invert=false){
 
 //#region GAME
 function setupBoard(loadedData){
-  board.classList.remove("capturing")
-  capture.classList.remove("capturing")
+  document.body.classList.remove("capturing")
 
   cells=[]
   minesLaid=0
