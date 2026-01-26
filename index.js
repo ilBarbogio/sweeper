@@ -1,23 +1,21 @@
 let boardSide, board, capture, cells, minesLaid, phase, counter, stream
 let victory, imageUrl
 
-// function detectImage(){
-  // let encr=btoa("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQziAhrQ2boRgrbEv6GbMLqkdm9nr6Ah5LbnA&s")
-  // console.log(encr)
+function detectImage(){
+  let encr=btoa("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQziAhrQ2boRgrbEv6GbMLqkdm9nr6Ah5LbnA&s")
+  console.log(encr)
 
-//   if(window.location?.search){
-//     let str=window.location?.search.replace("?image=","")
-//     imageUrl=atob(str)
-//     // console.log(imageUrl)
-//   }else imageUrl=undefined
-
-//   setup()
-// }
+  if(window.location?.search){
+    let str=window.location?.search.replace("?image=","")
+    return atob(str)
+  }else return undefined
+}
 
 function setup(){
   board=document.querySelector(".board")
   board.innerHTML=""
-  if(imageUrl) board.style.backgroundImage=`url("${imageUrl}")`
+  const locImage=detectImage()
+  if(locImage) board.style.backgroundImage=`url("${locImage}")`
 
   capture=document.querySelector(".capture")
 
@@ -95,6 +93,10 @@ function snapImage(){
         can.height=side
 
         container.querySelector(".image-container").append(can)
+
+        let rect=document.createElement("div")
+        rect.classList.add("rect")
+        container.querySelector(".image-container").append(rect)
 
         ctx.drawImage(img,0,0,side,side,0,0,side,side)
         img.remove()
@@ -326,7 +328,7 @@ function uncoverCell(clicked){
       endgame()
     }else{
       clicked.classList.add("uncovered")
-      if(imageUrl) clicked.classList.add("transparent")
+      // if(imageUrl) clicked.classList.add("transparent")
       clicked.innerHTML=clicked.dataset.value!=0?clicked.dataset.value:""
       let queued=[clicked]
 
@@ -336,7 +338,7 @@ function uncoverCell(clicked){
         for(let n of neighs){
           if(!n.classList.contains("uncovered") && n.dataset.mine==0){
             n.classList.add("uncovered")
-            if(imageUrl) n.classList.add("transparent")
+            // if(imageUrl) n.classList.add("transparent")
             n.innerHTML=n.dataset.value!=0?n.dataset.value:""
             if(c.dataset.value==0) queued.push(n)
           }
