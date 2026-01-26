@@ -58,17 +58,13 @@ body{
 
       &.uncovered{
         color:darkslategray;
-        background-color: #778899aa;
+        background-color: #778899ee;
         
         border-width: 1px;
         border-style: inset;
         border-color: lightslategray darkslategray darkslategray lightslategray;
         border-radius:1px;
         
-        &.transparent{
-          background-color: #778899dd;
-          backdrop-filter: blur(10px);
-        }
       }
 
       &.flagged{
