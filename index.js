@@ -71,7 +71,7 @@ function snapImage(){
   const input=document.createElement("input")
   input.type="file"
   input.capture="user"
-  input.accept="image/*"
+  input.setAttribute("accept","image/*")
   input.addEventListener("change",(ev)=>{
     if(ev.target.files.length==1){
       let file=ev.target.files[0]
