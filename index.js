@@ -35,6 +35,9 @@ function setup(){
   document.querySelector("button.snap").addEventListener("click",()=>{
     snapImage()
   })
+  document.querySelector("button.file").addEventListener("click",()=>{
+    snapImage(true)
+  })
 
   document.querySelector("button.save").addEventListener("click",()=>{
     saveImage()
@@ -62,7 +65,7 @@ async function switchToCapture(){
   document.body.querySelector("button.save").setAttribute("disabled",true)
 }
 
-function snapImage(){
+function snapImage(fromFile=false){
   const container=document.body.querySelector(".capture")
 
   let prevImg=container.querySelector("img")
@@ -70,7 +73,7 @@ function snapImage(){
 
   const input=document.createElement("input")
   input.type="file"
-  input.capture="user"
+  if(!fromFile) input.capture="user"
   input.setAttribute("accept","image/*")
   input.addEventListener("change",(ev)=>{
     if(ev.target.files.length==1){
@@ -82,6 +85,9 @@ function snapImage(){
         URL.revokeObjectURL(url)
         container.querySelector("button.save").removeAttribute("disabled")
 
+        const prevCan=container.querySelector("canvas")
+        if(prevCan) prevCan.remove()
+          
         const can=document.createElement("canvas")
         const ctx=can.getContext("2d",{willFrequentlyRead:true})
 
