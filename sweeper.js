@@ -16,7 +16,7 @@ export function transition(){
 }
 
 function setup(){
-  for(let f of outlet.querySelectorAll(".flag")) f.addEventListener("click",(ev)=>{
+  for(let f of outlet.querySelectorAll(".flag")) f.addEventListener("pointerdown",(ev)=>{
     for(let f of outlet.querySelectorAll(".flag")) f.classList.toggle("active")
   })
 
@@ -67,7 +67,7 @@ function setup(){
       colorCells(rndPoints())
     },time)
   },.5*time)
-  board.addEventListener("click",clickTile)
+  board.addEventListener("pointerdown",clickTile)
 }
 
 export function unmount(){
