@@ -67,7 +67,7 @@ function setup(){
       colorCells(rndPoints())
     },time)
   },.5*time)
-  board.addEventListener("pointerup",clickTile)
+  board.addEventListener("pointerup",()=>{clickTile()})
 }
 
 export function unmount(){
@@ -235,7 +235,7 @@ function flagCell(cell){
 }
 
 function clickTile(ev){
-  if(navigator.vibrate) navigator.vibrate(150)
+  if("vibrate" in navigator) navigator.vibrate(50)
   ev.stopPropagation()
   if(victory===undefined && ev.target.classList.contains("cell")){
     let cell=ev.target
