@@ -16,7 +16,7 @@ export function transition(){
 }
 
 function setup(){
-  for(let f of outlet.querySelectorAll(".flag")) f.addEventListener("pointerdown",(ev)=>{
+  for(let f of outlet.querySelectorAll(".flag")) f.addEventListener("pointerup",(ev)=>{
     for(let f of outlet.querySelectorAll(".flag")) f.classList.toggle("active")
   })
 
