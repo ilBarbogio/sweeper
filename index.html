@@ -3,24 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DocumeSweepernt</title>
+  <title>DocumeSweeper</title>
   <link rel="stylesheet" href="./index.css"/>
 </head>
 <body>
-  <div class="board"></div>
-  <div class="endgame">placeholder</div>
-  <div class="capture">
-    <div class="image-container"></div>
-
-    <div>
-      <button class="snap">snap</button>
-      <button class="file">file</button>
-    </div>
-    <button class="save">save</button>
-    <button class="load">load</button>
-    <button class="exit">exit</button>
+  <template id="menu-template">
+    <div class="tile" data-game="sweeper">⚑</div>
+  </template>
   
-  </div>
-  <script src="./index.js"></script>
+  <template id="sweeper-template">
+    <div class="button flag">⚑</div>
+    <div class="board"></div>
+    <div class="button flag">⚑</div>
+  </template>
+
+  <template id="sliding-template">
+    <div class="button undo">↺</div>
+    <div class="board"></div>
+    <div class="button undo">↺</div>
+  </template>
+
+  <template id="picross-template">
+    <div class="button buh">⚑</div>
+    <div class="board"></div>
+    <div class="button buh">⚑</div>
+  </template>
+
+  <template id="minihjong-template">
+    <div class="board"></div>
+    <div class="board"></div>
+  </template>
+
+  <div id="main-outlet"></div>
+  <script src="./index.js" type="module"></script>
 </body>
 </html>
