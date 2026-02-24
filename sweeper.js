@@ -67,7 +67,7 @@ function setup(){
       colorCells(rndPoints())
     },time)
   },.5*time)
-  board.addEventListener("pointerdown",clickTile)
+  board.addEventListener("pointerup",clickTile)
 }
 
 export function unmount(){
