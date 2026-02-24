@@ -235,7 +235,7 @@ function flagCell(cell){
 }
 
 function clickTile(ev){
-  navigator.vibrate(50)
+  navigator.vibrate([50])
   ev.stopPropagation()
   if(victory===undefined && ev.target.classList.contains("cell")){
     let cell=ev.target
