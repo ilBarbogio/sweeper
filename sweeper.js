@@ -16,7 +16,8 @@ export function transition(){
 }
 
 function setup(){
-  for(let f of outlet.querySelectorAll(".flag")) f.addEventListener("pointerup",(ev)=>{
+  for(let f of outlet.querySelectorAll(".flag")) f.addEventListener("pointerdown",(ev)=>{
+    if("vibrate" in navigator) navigator.vibrate(200)
     for(let f of outlet.querySelectorAll(".flag")) f.classList.toggle("active")
   })
 
@@ -67,7 +68,7 @@ function setup(){
       colorCells(rndPoints())
     },time)
   },.5*time)
-  board.addEventListener("pointerup",(ev)=>{clickTile(ev)})
+  board.addEventListener("pointerdown",(ev)=>{clickTile(ev)})
 }
 
 export function unmount(){
