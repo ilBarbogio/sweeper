@@ -72,13 +72,13 @@ function setup(){
 
   board.addEventListener("pointerdown",()=>{
     navigator.vibrate(100)
-  }
+  })
   board.addEventListener("pointerup",()=>{
     navigator.vibrate(200)
-  }
+  })
   board.addEventListener("touchend",()=>{
     navigator.vibrate(500)
-  }
+  })
 }
 
 export function unmount(){
