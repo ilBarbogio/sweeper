@@ -16,8 +16,8 @@ export function transition(){
 }
 
 function setup(){
-  for(let f of outlet.querySelectorAll(".flag")) f.addEventListener("pointerdown",(ev)=>{
-    if("vibrate" in navigator) navigator.vibrate(200)
+  for(let f of outlet.querySelectorAll(".flag")) f.addEventListener("click",(ev)=>{
+    navigator.vibrate(200)
     for(let f of outlet.querySelectorAll(".flag")) f.classList.toggle("active")
   })
 
@@ -68,7 +68,17 @@ function setup(){
       colorCells(rndPoints())
     },time)
   },.5*time)
-  board.addEventListener("pointerdown",(ev)=>{clickTile(ev)})
+  board.addEventListener("click",clickTile})
+
+  board.addEventListener("pointerdown",()=>{
+    navigator.vibrate(100)
+  }
+  board.addEventListener("pointerup",()=>{
+    navigator.vibrate(200)
+  }
+  board.addEventListener("touchend",()=>{
+    navigator.vibrate(500)
+  }
 }
 
 export function unmount(){
@@ -236,7 +246,6 @@ function flagCell(cell){
 }
 
 function clickTile(ev){
-  if("vibrate" in navigator) navigator.vibrate(50)
   ev.stopPropagation()
   if(victory===undefined && ev.target.classList.contains("cell")){
     let cell=ev.target
