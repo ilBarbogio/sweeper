@@ -68,7 +68,7 @@ function setup(){
       colorCells(rndPoints())
     },time)
   },.5*time)
-  board.addEventListener("click",clickTile})
+  board.addEventListener("click",clickTile)
 
   board.addEventListener("pointerdown",()=>{
     navigator.vibrate(100)
